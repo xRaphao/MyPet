@@ -1,3 +1,4 @@
+#%%
 import tensorflow as tf 
 import os
 import cv2
@@ -30,3 +31,17 @@ for image_class in os.listdir(data_dir):
         except Exception as e: 
             print('Issue with image {}'.format(image_path))
             # os.remove(image_path)
+            
+# 1.3 Load Data
+
+data = tf.keras.utils.image_dataset_from_directory('data')
+
+data_iterator = data.as_numpy_iterator()
+
+batch = data_iterator.next()
+
+fig, ax = plt.subplots(ncols=4, figsize=(20,20))
+for idx, img in enumerate(batch[0][:4]):
+    ax[idx].imshow(img.astype(int))
+    ax[idx].title.set_text(batch[1][idx])
+
