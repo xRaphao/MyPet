@@ -45,3 +45,20 @@ for idx, img in enumerate(batch[0][:4]):
     ax[idx].imshow(img.astype(int))
     ax[idx].title.set_text(batch[1][idx])
 
+# 1.4 Scale Data
+
+data = data.map(lambda x,y: (x/255, y))
+data.as_numpy_iterator().next()
+
+# 1.5 Split Data
+
+train_size = int(len(data)*.7)
+val_size = int(len(data)*.2)
+test_size = int(len(data)*.1)
+
+train_size
+
+train = data.take(train_size)
+val = data.skip(train_size).take(val_size)
+test = data.skip(train_size+val_size).take(test_size)
+# %%
