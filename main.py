@@ -109,4 +109,45 @@ plt.show()
 
 # 1.9 Evaluate
 # %%
+from tensorflow.keras.metrics import Precision, Recall, BinaryAccuracy
+pre = Precision()
+re = Recall()
+acc = BinaryAccuracy()
+for batch in test.as_numpy_iterator(): 
+    X, y = batch
+    yhat = model.predict(X)
+    pre.update_state(y, yhat)
+    re.update_state(y, yhat)
+    acc.update_state(y, yhat)
+print(pre.result(), re.result(), acc.result())
+tf.Tensor(1.0, shape=(), dtype=float32) tf.Tensor(1.0, shape=(), dtype=float32) tf.Tensor(1.0, shape=(), dtype=float32)
 
+# 2.0 Test
+# %%
+import cv2
+img = cv2.imread('healthy4.jpeg')
+plt.imshow(img)
+plt.show()
+
+resize = tf.image.resize(img, (256,256))
+plt.imshow(resize.numpy().astype(int))
+plt.show()
+
+yhat = model.predict(np.expand_dims(resize/255, 0))
+
+
+if yhat > 0.5: 
+    print(f'Cachorro com sarna')
+else:
+    print(f'Cachorro saudável')
+    
+# 2.1 Save the model
+
+from tensorflow.keras.models import load_model
+model.save(os.path.join('models','imageclassifier.h5'))
+new_model = load_model('imageclassifier.h5')
+new_model.predict(np.expand_dims(resize/255, 0))
+array([[0.01972741]], dtype=float32)
+
+
+# %%
